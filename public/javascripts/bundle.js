@@ -9603,30 +9603,35 @@ var TodoItem = function (_React$Component) {
 var TodoMain = function (_React$Component2) {
     _inherits(TodoMain, _React$Component2);
 
-    function TodoMain(props) {
+    function TodoMain() {
         _classCallCheck(this, TodoMain);
 
-        /*this.state = {
-         list: []
-         }*/
-        var _this2 = _possibleConstructorReturn(this, (TodoMain.__proto__ || Object.getPrototypeOf(TodoMain)).call(this, props));
-
-        _this2.List = _this2.props.data.map(function (listItem, index) {
-            return _react2.default.createElement(TodoItem, { data: listItem, index: index, 'delete': this.props.delete.bind(this) });
-        }, _this2);
-        return _this2;
+        return _possibleConstructorReturn(this, (TodoMain.__proto__ || Object.getPrototypeOf(TodoMain)).apply(this, arguments));
     }
 
     _createClass(TodoMain, [{
-        key: 'func',
-        value: function func() {}
-    }, {
         key: 'render',
+
+        /*  constructor(props) {
+              super(props);
+                this.List = props.data.map(function (listItem,index) {
+                  return (
+                      <TodoItem data={listItem} index={index} delete={this.props.delete.bind(this)} />
+                  )
+              },this);
+          }
+          func () {
+            }*/
         value: function render() {
+            var _this3 = this;
+
+            console.log(this.props);
             return _react2.default.createElement(
                 'ul',
                 { className: 'list-group' },
-                this.List
+                this.props.data.map(function (todo, index) {
+                    return _react2.default.createElement(TodoItem, { index: index, data: todo, 'delete': _this3.props.delete.bind(_this3) });
+                })
             );
         }
     }]);
@@ -9641,11 +9646,11 @@ var TodoBox = function (_React$Component3) {
     function TodoBox() {
         _classCallCheck(this, TodoBox);
 
-        var _this3 = _possibleConstructorReturn(this, (TodoBox.__proto__ || Object.getPrototypeOf(TodoBox)).call(this));
+        var _this4 = _possibleConstructorReturn(this, (TodoBox.__proto__ || Object.getPrototypeOf(TodoBox)).call(this));
 
-        _this3.state = { data: [{ "id": "0001", "task": "吃饭", "complete": "false" }, { "id": "0002", "task": "睡觉", "complete": "false" }, { "id": "0003", "task": "打豆豆", "complete": "true" }] };
-        _this3.deleteItem(2);
-        return _this3;
+        _this4.state = { data: [{ "id": "0001", "task": "吃饭", "complete": "false" }, { "id": "0002", "task": "睡觉", "complete": "false" }, { "id": "0003", "task": "打豆豆", "complete": "true" }] };
+
+        return _this4;
     }
 
     _createClass(TodoBox, [{
