@@ -9559,34 +9559,48 @@ var TodoItem = function (_React$Component) {
     function TodoItem(props) {
         _classCallCheck(this, TodoItem);
 
-        var _this = _possibleConstructorReturn(this, (TodoItem.__proto__ || Object.getPrototypeOf(TodoItem)).call(this, props));
-
-        _this.state = { data: _this.props.data };
-        return _this;
+        return _possibleConstructorReturn(this, (TodoItem.__proto__ || Object.getPrototypeOf(TodoItem)).call(this, props));
     }
 
     _createClass(TodoItem, [{
+        key: 'toggleComplete',
+        value: function toggleComplete() {
+            ///已完成按钮
+            var complete = void 0;
+            if (this.props.data.complete == "true") complete = "false";else complete = "true";
+
+            console.log(complete);
+
+            this.props.edit(this.props.index, 'complete', complete);
+        }
+    }, {
         key: 'handlerMouseOver',
         value: function handlerMouseOver() {}
     }, {
         key: 'Itdelete',
         value: function Itdelete() {
             ///删除使节点不可见，再删除数据
-            console.log(this.props);
-            this.props.delete(this.props.index);
+            this.props.edit(this.props.index, 'delete');
         }
     }, {
         key: 'render',
         value: function render() {
-            console.log(this.props);
+            var task = this.props.data.task;
+            if (this.props.data.complete == "true") {
+                task = _react2.default.createElement(
+                    's',
+                    null,
+                    task
+                );
+            }
             return _react2.default.createElement(
                 'li',
-                { className: 'list-group-item' },
-                _react2.default.createElement('input', { className: 'pull-left', type: 'checkbox', checked: this.state.data.complete }),
+                { className: 'list-group-item list-group-item-success' },
+                _react2.default.createElement('input', { value: '1', className: 'pull-left ', type: 'checkbox', checked: this.props.data.complete == "true", onChange: this.toggleComplete.bind(this) }),
                 _react2.default.createElement(
                     'span',
                     null,
-                    this.state.data.task
+                    task
                 ),
                 _react2.default.createElement(
                     'button',
@@ -9600,8 +9614,43 @@ var TodoItem = function (_React$Component) {
     return TodoItem;
 }(_react2.default.Component);
 
-var TodoMain = function (_React$Component2) {
-    _inherits(TodoMain, _React$Component2);
+var TodoFoot = function (_React$Component2) {
+    _inherits(TodoFoot, _React$Component2);
+
+    function TodoFoot() {
+        _classCallCheck(this, TodoFoot);
+
+        return _possibleConstructorReturn(this, (TodoFoot.__proto__ || Object.getPrototypeOf(TodoFoot)).apply(this, arguments));
+    }
+
+    _createClass(TodoFoot, [{
+        key: 'addItem',
+        value: function addItem() {
+            var task = _reactDom2.default.findDOMNode(this.refs.task).value.trim();
+            console.log(task.length);
+            if (task.length >= 2) {
+                this.props.edit(0, 'add', task);
+            } else {
+                alert("输入信息过短");
+            }
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            return _react2.default.createElement(
+                'div',
+                { className: 'form-group form-horizontal' },
+                _react2.default.createElement('input', { type: 'text', ref: 'task', className: 'form-control', placeholder: '\u4F60\u60F3\u505A\u70B9\u4EC0\u4E48' }),
+                _react2.default.createElement('input', { className: 'center-block', type: 'button', value: '\u63D0\u4EA4', onClick: this.addItem.bind(this) })
+            );
+        }
+    }]);
+
+    return TodoFoot;
+}(_react2.default.Component);
+
+var TodoMain = function (_React$Component3) {
+    _inherits(TodoMain, _React$Component3);
 
     function TodoMain() {
         _classCallCheck(this, TodoMain);
@@ -9611,27 +9660,25 @@ var TodoMain = function (_React$Component2) {
 
     _createClass(TodoMain, [{
         key: 'render',
-
-        /*  constructor(props) {
-              super(props);
-                this.List = props.data.map(function (listItem,index) {
-                  return (
-                      <TodoItem data={listItem} index={index} delete={this.props.delete.bind(this)} />
-                  )
-              },this);
-          }
-          func () {
-            }*/
         value: function render() {
-            var _this3 = this;
+            var _this4 = this;
 
-            console.log(this.props);
             return _react2.default.createElement(
                 'ul',
                 { className: 'list-group' },
                 this.props.data.map(function (todo, index) {
-                    return _react2.default.createElement(TodoItem, { index: index, data: todo, 'delete': _this3.props.delete.bind(_this3) });
-                })
+                    return _react2.default.createElement(TodoItem, { key: todo.id, index: index, data: todo, edit: _this4.props.edit.bind(_this4) });
+                }),
+                _react2.default.createElement('hr', null),
+                _react2.default.createElement(
+                    'p',
+                    null,
+                    '\u5DF2\u5B8C\u6210',
+                    this.props.cout.todoCompleteCount,
+                    '/\u603B\u6570',
+                    this.props.cout.todoCout
+                ),
+                _react2.default.createElement(TodoFoot, { edit: this.props.edit.bind(this) })
             );
         }
     }]);
@@ -9639,25 +9686,112 @@ var TodoMain = function (_React$Component2) {
     return TodoMain;
 }(_react2.default.Component);
 
-var TodoBox = function (_React$Component3) {
-    _inherits(TodoBox, _React$Component3);
+var TodoBox = function (_React$Component4) {
+    _inherits(TodoBox, _React$Component4);
 
     ///todo根目录
     function TodoBox() {
         _classCallCheck(this, TodoBox);
 
-        var _this4 = _possibleConstructorReturn(this, (TodoBox.__proto__ || Object.getPrototypeOf(TodoBox)).call(this));
+        var _this5 = _possibleConstructorReturn(this, (TodoBox.__proto__ || Object.getPrototypeOf(TodoBox)).call(this));
 
-        _this4.state = { data: [{ "id": "0001", "task": "吃饭", "complete": "false" }, { "id": "0002", "task": "睡觉", "complete": "false" }, { "id": "0003", "task": "打豆豆", "complete": "true" }] };
+        _this5.state = { data: [] };
+        _this5.getdata(_this5.state);
 
-        return _this4;
+        return _this5;
     }
 
     _createClass(TodoBox, [{
-        key: 'deleteItem',
-        value: function deleteItem(index) {
+        key: 'getdata',
+        value: function getdata(state) {
+            var _this6 = this;
+
+            fetch('/getdata', {
+                method: 'GET'
+            }).then(function (rep) {
+
+                rep.json().then(function (data) {
+                    ///解析返回的数据
+                    console.log(data);
+                    _this6.setState({
+                        data: data
+                    });
+                });
+            });
+        }
+    }, {
+        key: 'addItem',
+        value: function addItem(Item) {
+            console.log("addsuccess");
+            fetch('/getdata', {
+                method: 'POST',
+                mode: 'cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(Item)
+            }).then(function (rep) {
+
+                rep.json().then(function (data) {
+                    ///解析返回的数据
+                    console.log(data);
+                });
+            }).catch(function (err) {
+                console.log(err);
+            });
+        }
+    }, {
+        key: 'delete',
+        value: function _delete(id) {
+            fetch('/delete/' + id, {
+                method: 'DELETE'
+            }).then(function (rep) {
+
+                rep.json().then(function (data) {
+                    ///解析返回的数据
+                    console.log(data);
+                    /* this.setState({
+                         data: data
+                     })*/
+                });
+            });
+        }
+    }, {
+        key: 'put',
+        value: function put(index, query) {
+            fetch('/put/' + index + '?' + query, {
+                method: 'PUT'
+            }).then(function (rep) {
+
+                rep.json().then(function (data) {
+                    ///解析返回的数据
+                    console.log(data);
+                    /* this.setState({
+                     data: data
+                     })*/
+                });
+            });
+        }
+    }, {
+        key: 'edit',
+        value: function edit(index, _edit) {
             var data = this.state.data;
-            data.splice(index, 1);
+            switch (_edit) {
+                case 'delete':
+                    data.splice(index, 1);
+                    this.delete(index);
+                    break;
+                case 'complete':
+                    data[index].complete = arguments[2];
+                    this.put(index, 'complete=' + arguments[2]);
+                    break;
+                case 'add':
+                    {
+                        var id = Math.floor(Math.random() * 9000) + 1000;
+                        data = data.concat([{ "id": id, "task": arguments[2], "complete": "false" }]);
+                        this.addItem({ "id": id, "task": arguments[2], "complete": "false" });
+                        break;
+                    }
+
+            }
             this.setState({ data: data });
         }
     }, {
@@ -9666,7 +9800,13 @@ var TodoBox = function (_React$Component3) {
     }, {
         key: 'render',
         value: function render() {
-            return _react2.default.createElement(TodoMain, { data: this.state.data, 'delete': this.deleteItem.bind(this) });
+            var statistics = {
+                todoCout: this.state.data.length || 0,
+                todoCompleteCount: this.state.data.filter(function (item) {
+                    return item.complete == "true";
+                }).length
+            };
+            return _react2.default.createElement(TodoMain, { data: this.state.data, edit: this.edit.bind(this), cout: statistics });
         }
     }]);
 
